@@ -49,7 +49,7 @@ jobs:
           
       - name: Test
         run: |
-          docker run jinjinb/ci-cd-with-github-actions-test:latest python -m unittest test_app.py test_integration.py 
+          docker run jinjinb/ci-cd-with-github-actions-test:test python -m unittest test_app.py test_integration.py 
           
       - name: Build and push
         uses: docker/build-push-action@v5

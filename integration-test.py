@@ -8,8 +8,8 @@ from selenium.webdriver.common.by import By
 class TestAppE2E(unittest.TestCase):
     def setUp(self):
         chrome_options = Options()
-        chrome_options.add_experimental_option("detach", True)
-        
+        # chrome_options.add_experimental_option("detach", True)
+        chrome_options.add_argument('--no-sandbox')
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.get('http://localhost:5000')
 

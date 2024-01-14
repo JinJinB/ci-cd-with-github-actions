@@ -17,7 +17,7 @@ jobs:
       selenium:
         image: selenium/standalone-chrome:latest
         ports:
-          - "5002:5002"
+          - "5000:5000"
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

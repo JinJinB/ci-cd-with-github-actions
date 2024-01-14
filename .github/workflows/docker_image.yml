@@ -1,66 +1,60 @@
-# name: Docker Image CI/CD
+name: CI-CD-Docker
 
-# on:
-#   push:
-#     branches: [ "adding-test" ]
-#   pull_request:
-#     branches: [ "adding-test" ]
+on:
+  push:
+    branches: [ "adding-test" ]
+  pull_request:
+    branches: [ "adding-test" ]
 
-# jobs:
-#   build:
-#     name: build
-#     runs-on: ubuntu-latest
-#     permissions:
-#       packages: write
-#       contents: read
-#     services:
-#       selenium:
-#         image: selenium/standalone-chrome:latest
-#         ports:
-#           - "5002:5002"
-#     steps:
-#       - name: Check out the repo
-#         uses: actions/checkout@v4
+jobs:
+  ci-cd-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: 3.8
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
 
-#       - name: Install dependencies
-#         run: pip install -r requirements.txt
+      - name: Build Docker image
+        run: docker build -t jinjinb/ci-cd-with-github-actions-test .
 
-#       - name: Build Docker image
-#         run: docker build -t jinjinb/ci-cd-with-github-actions-test .
+      - name: Run Docker container
+        run: |
+          docker run -d -p 5000:5000 --name app jinjinb/ci-cd-with-github-actions-test:latest
 
-#       - name: Start Docker container with app
-#         run: docker run -d -p 5000:5000 --name app-container jinjinb/ci-cd-with-github-actions-test
+      - name: Run Unit Tests
+        run: docker exec app python -m unittest unit-test.py
 
-#       - name: Run Unit-test
-#         run: python unit-test.py
+      # I didn't find a way to test selenium in Docker...
+      # - name: Prepare Selenium
+      #   uses: nanasess/setup-chromedriver@master
+      # - name: Launch browser
+      #   run: |
+      #     sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+      # - name: Run Integration Tests
+      #   run: docker exec app python integration-test.py
 
-#       - name: Run Selenium test
-#         run: |
-#           sudo apt-get install -y chromium-browser
-#           python integration-test.py
+      - name: Stop Docker container
+        run: docker stop app
 
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           
-#       - name: Extract metadata (tags, labels) for Docker
-#         id: meta
-#         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-#         with:
-#           images: |
-#             jinjinb/ci-cd-with-github-actions-test
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: |
+            jinjinb/ci-cd-with-github-actions-test
             
-#       - name: Build and push Docker images
-#         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-#         with:
-#           context: .
-#           push: true
-#           tags: ${{ steps.meta.outputs.tags }}
-#           labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

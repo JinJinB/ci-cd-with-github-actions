@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          sudo apt-get install -y chromium
+          sudo apt-get install -y chromium-browser
           docker exec app python -m unittest integration-test.py
 
       - name: Stop Docker container

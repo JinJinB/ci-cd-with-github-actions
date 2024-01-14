@@ -1,69 +1,69 @@
-name: Docker Image CI/CD
+# name: Docker Image CI/CD
 
-on:
-  push:
-    branches: [ "adding-test" ]
-  pull_request:
-    branches: [ "adding-test" ]
+# on:
+#   push:
+#     branches: [ "adding-test" ]
+#   pull_request:
+#     branches: [ "adding-test" ]
 
-jobs:
-  build:
-    name: build
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - "5002:5002"
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
+# jobs:
+#   build:
+#     name: build
+#     runs-on: ubuntu-latest
+#     permissions:
+#       packages: write
+#       contents: read
+#     services:
+#       selenium:
+#         image: selenium/standalone-chrome:latest
+#         ports:
+#           - "5002:5002"
+#     steps:
+#       - name: Check out the repo
+#         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+#       - name: Install dependencies
+#         run: pip install -r requirements.txt
 
-      - name: Build Docker image
-        run: docker build -t jinjinb/ci-cd-with-github-actions-test .
+#       - name: Build Docker image
+#         run: docker build -t jinjinb/ci-cd-with-github-actions-test .
 
-      - name: Start Docker container with app
-        run: docker run -d -p 5000:5000 --name app-container jinjinb/ci-cd-with-github-actions-test
+#       - name: Start Docker container with app
+#         run: docker run -d -p 5000:5000 --name app-container jinjinb/ci-cd-with-github-actions-test
 
-      - name: Run Unit-test
-        run: python unit-test.py
+#       - name: Run Unit-test
+#         run: python unit-test.py
 
-      - name: Run Selenium test
-        run: |
-          docker pull selenium/standalone-chrome
-          docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
-          python integration-test.py
+#       - name: Run Selenium test
+#         run: |
+#           docker pull selenium/standalone-chrome
+#           docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
+#           python integration-test.py
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
           
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: |
-            jinjinb/ci-cd-with-github-actions-test
+#       - name: Extract metadata (tags, labels) for Docker
+#         id: meta
+#         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#         with:
+#           images: |
+#             jinjinb/ci-cd-with-github-actions-test
             
-      - name: Build and push Docker images
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+#       - name: Build and push Docker images
+#         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+#         with:
+#           context: .
+#           push: true
+#           tags: ${{ steps.meta.outputs.tags }}
+#           labels: ${{ steps.meta.outputs.labels }}
 
       

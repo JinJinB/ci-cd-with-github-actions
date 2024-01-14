@@ -34,7 +34,7 @@ jobs:
         run: docker exec app python -m unittest unit-test.py
 
       - name: Prepare Selenium
-        uses: nanasess/setup-chromedriver@v1.0.5
+        uses: nanasess/setup-chromedriver@master
 
       - name: Launch browser
         run: |

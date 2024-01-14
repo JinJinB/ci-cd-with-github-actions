@@ -41,8 +41,7 @@ jobs:
 
       - name: Run Selenium test
         run: |
-          docker pull selenium/standalone-chrome
-          docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
+          sudo apt-get install -y chromium-browser
           python integration-test.py
 
       - name: Log in to Docker Hub
@@ -65,5 +64,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      

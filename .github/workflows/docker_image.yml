@@ -45,6 +45,7 @@ jobs:
 
       - name: Run tests
         run: |
+          docker run app
           python unit-test.py
           python app.py
           python integration-test.py

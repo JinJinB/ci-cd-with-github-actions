@@ -20,11 +20,6 @@ jobs:
       - name: Build Docker image
         run: docker build -t jinjinb/ci-cd-with-github-actions-test .
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -45,10 +40,6 @@ jobs:
       - name: Stop Docker container
         run: docker stop app
 
-  push:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:

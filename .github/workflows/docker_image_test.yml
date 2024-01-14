@@ -34,10 +34,18 @@ jobs:
       - name: Run Unit Tests
         run: docker exec app python -m unittest unit-test.py
 
-      - name: Run Integration Tests
+      - name: Prepare Selenium
+        uses: nanasess/setup-chromedriver@master
+
+      - name: Launch browser
         run: |
-          sudo apt-get install -y chromium-browser
-          docker exec app python -m unittest integration-test.py
+          google-chrome --version
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+
+      - name: Run Integration Tests
+        run: docker exec app python -m unittest integration-test.py
 
       - name: Stop Docker container
         run: docker stop app

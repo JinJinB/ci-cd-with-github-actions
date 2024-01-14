@@ -2,8 +2,9 @@ name: Docker Build and Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "adding-test" ]
+  pull_request:
+    branches: [ "adding-test" ]
 
 jobs:
   build:

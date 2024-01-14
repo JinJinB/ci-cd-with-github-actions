@@ -51,10 +51,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Start Docker container with app
+        run: docker run -d -p 5002:5000 --name app-container app
+
       - name: Run tests
         run: |
+          export APP_URL=http://localhost:5002
           python unit-test.py
-          python app.py
           python integration-test.py
 
   push:

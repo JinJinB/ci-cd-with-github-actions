@@ -45,7 +45,7 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 
       - name: Run Integration Tests
-        run: docker exec app python -m unittest integration-test.py
+        run: python integration-test.py
 
       - name: Stop Docker container
         run: docker stop app

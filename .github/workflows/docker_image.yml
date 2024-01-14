@@ -60,6 +60,10 @@ jobs:
           python unit-test.py
           python integration-test.py
 
+      - name: Stop Docker container
+        run: docker stop app-container
+        continue-on-error: true
+
   push:
     runs-on: ubuntu-latest
     needs: test

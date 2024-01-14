@@ -38,6 +38,9 @@ jobs:
           - "5002:5002"
 
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:

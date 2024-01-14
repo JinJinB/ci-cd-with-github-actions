@@ -17,7 +17,7 @@ jobs:
       selenium:
         image: selenium/standalone-chrome:latest
         ports:
-          - "5000:5000"
+          - "5002:5002"
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -38,6 +38,7 @@ jobs:
 
       - name: Run tests
         run: |
+          export APP_URL=http://localhost:5000
           python unit-test.py
           python integration-test.py
 

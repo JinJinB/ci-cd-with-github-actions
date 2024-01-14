@@ -36,10 +36,13 @@ jobs:
       - name: Start Docker container with app
         run: docker run -d -p 5000:5000 --name app-container jinjinb/ci-cd-with-github-actions-test
 
-      - name: Run tests
+      - name: Run Unit-test
+        run: python unit-test.py
+
+      - name: Run Selenium test
         run: |
-          export APP_URL=http://localhost:5000
-          python unit-test.py
+          docker pull selenium/standalone-chrome
+          docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
           python integration-test.py
 
       - name: Log in to Docker Hub

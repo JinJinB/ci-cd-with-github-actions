@@ -1,10 +1,12 @@
 FROM python:3.8-slim
 
-WORKDIR /usr/app
+WORKDIR /app
 
-COPY . /usr/app/
+COPY requirements.txt /app/
 
 RUN pip install -r requirements.txt
+
+COPY . /app
 
 EXPOSE 5000
 

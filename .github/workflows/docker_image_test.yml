@@ -2,13 +2,13 @@ name: Docker Compose Build and Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "adding-test" ]
+  pull_request:
+    branches: [ "adding-test" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,7 +19,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: build
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -38,7 +37,6 @@ jobs:
   push:
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Set up Docker Compose
         uses: docker/compose-action@v2

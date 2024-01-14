@@ -34,11 +34,11 @@ jobs:
         run: docker build -t jinjinb/ci-cd-with-github-actions-test .
 
       - name: Start Docker container with app
-        run: docker run -d -p 5002:5002 --name app-container jinjinb/ci-cd-with-github-actions-test
+        run: docker run -d -p 5003:5000 --name app-container jinjinb/ci-cd-with-github-actions-test
 
       - name: Run tests
         run: |
-          export APP_URL=http://localhost:5002
+          export APP_URL=http://localhost:5003
           python unit-test.py
           python integration-test.py
 

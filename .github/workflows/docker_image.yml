@@ -43,11 +43,11 @@ jobs:
         with:
           python-version: 3.8
 
-      # - name: Install dependencies for testing
-      #   run: pip install -r requirements.txt
-
       - name: Run tests
-        run: python -m unittest discover
+        run: |
+          python unit-test.py
+          python app.py
+          python integration-test.py
 
   push:
     runs-on: ubuntu-latest
